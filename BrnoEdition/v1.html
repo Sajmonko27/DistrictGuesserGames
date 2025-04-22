@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>District guesser</title>
+    <link rel="Shortcut Icon" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'roboto';
+            padding: 0;
+            margin: 0;
+        }
+        #welcome {
+            width: 100vw;
+            height: 100vh;
+            background-image: url("Background.png");
+            background-size: cover;
+        }
+        #welcome-column {
+            padding-top: 16rem;
+            width: 20rem;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #welcome-column p {
+            font-size: 12px;
+            margin-top: .5rem;
+        }
+        .start-btn {
+            margin-top: .5rem;
+            width: 12rem;
+            height: 2rem;
+        }
+        .start-btn:hover {
+            cursor: pointer;
+        }
+        #game {
+            width: 100vw;
+            height: 100vh;
+        }
+        #game-column {
+            padding-top: 1rem;
+            width: 20rem;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #game-img {
+            width: 60rem;
+        }
+        .answer-btn {
+            margin-top: .5rem;
+            width: 12rem;
+            height: 2.5rem;
+            border: 1px #101010 solid;
+            border-radius: 2px;
+            font-size: 16px;
+            letter-spacing: .25px;
+        }
+        .answer-btn:hover {
+            background-color: #ddd;
+            cursor: pointer;
+        }
+        #results-column {
+            padding-top: 16rem;
+            width: 20rem;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #achievments {
+            padding-top: 16rem;
+            width: 20rem;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .achievment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            border: 1px #202020 solid;
+            height: 6rem;
+            width: 20rem;
+            border-radius: 2px;
+            margin-bottom: .5rem;
+        }
+        .achievment img {
+            height: 4rem;
+        }
+        .achievment h4 {
+            font-weight: 400;
+            font-size: 16px;
+            width: 14rem;
+        }
+        .achievment h5 {
+            font-weight: 500;
+        }
+        #answer-text-field {
+            height: 2.5rem;
+            padding-left: .75rem;
+            font-size: 16px;
+            width: 20rem;
+            border: 1px #101010 solid;
+            border-radius: 2px;
+            font-size: 16px;
+            letter-spacing: .25px;
+        }
+        #extreme-guessing-div {
+            flex-direction: column;
+        }
+        .locked {
+            background-color: gray;
+            background-image: url("diamonds.png");
+            pointer-events: none;
+        }
+        .completed {
+            background-color: #60d394;
+        }
+    </style>
+</head>
+<body>
+    <main id="welcome">
+        <div id="welcome-column">
+            <h1>Guess the District</h1>
+            <h3>Brno edition</h3>
+            <button class="start-btn" id="easy-btn">Easy</button>
+            <button class="start-btn" id="hard-btn">Hard</button>
+            <button class="start-btn" id="extreme-btn" style="background-color: #202020; color: white;">40 Quiz</button>
+            <button class="start-btn" id="achievments-btn">Achievments</button>
+            <button class="start-btn" id="reset-btn">Reset Progress</button>
+            <p>v1.0</p>
+        </div>
+    </main>
+    <main id="game" style="display: none;">
+        <div style="display: flex; flex-direction: column; position: absolute;">
+            <h3 id="game-questionNum">Question 1:</h3>
+            <h3 id="game-answersCorrect">0/10</h3>
+            <button class="menu-btn">Menu</button>
+        </div>
+        <div id="game-column">
+            <div id="game-img-div">
+                <img id="game-img" src="#">
+            </div>
+            <div id="game-guessing-div" style="display: flex; gap: 1rem;">
+                <button class="answer-btn" id="answer-btn-1">Answer 1</button>
+                <button class="answer-btn" id="answer-btn-2">Answer 2</button>
+                <button class="answer-btn" id="answer-btn-3">Answer 3</button>
+                <button class="answer-btn" id="answer-btn-4">Answer 4</button>
+            </div>
+            <div id="extreme-guessing-div" style="display: none; gap: 1rem;">
+                <div style="display: flex;">
+                    <input id="answer-text-field" type="text" placeholder="District name?">
+                    <button id="extreme-answer-btn">Answer</button>
+                </div>
+                <h2 id="extreme-error-msg"></h2>
+            </div>
+        </div>
+    </main>
+    <main id="results" style="display: none;">
+        <div id="results-column">
+            <h1>Final score:</h2>
+            <h3 id="results-text">Difficulty easy</h4>
+            <h2 id="results-score" style="margin-top: 1rem; margin-bottom: 1rem;">10/10</h2>
+            <button class="menu-btn" style="width: 12rem; height: 2rem;">Menu</button>
+
+        </div>
+    </main>
+    <main id="achievments" style="display: none;">
+        <div class="achievment locked" id="achievment1">
+            <img src="achievments/1.png">
+            <div>
+                <h4>Get 10/10 on easy</h4>
+                <h5 id="achievment1Status">Yet to unlock</h5>       
+            </div>
+        </div>
+        <div class="achievment locked" id="achievment2">
+            <img src="achievments/2.png">
+            <div>
+                <h4>Get 10/10 on hard</h4>
+                <h5 id="achievment2Status">Yet to unlock</h5>       
+            </div>
+        </div>
+        <div class="achievment locked" id="achievment3">
+            <img src="achievments/3.png">
+            <div>
+                <h4>Get over 30 correct in 40 Quiz</h4>
+                <h5 id="achievment3Status">Yet to unlock</h5>       
+            </div>
+        </div>
+        <button class="menu-btn" style="width: 12rem; height: 2rem;">Menu</button>
+
+    </main>
+    <script>
+        let easyBtn = document.getElementById("easy-btn");
+        let hardBtn = document.getElementById("hard-btn");
+        let achievmentsBtn = document.getElementById("achievments-btn")
+        let resetBtn = document.getElementById("reset-btn");
+
+        let extremeBtn = document.getElementById("extreme-btn")
+
+        easyBtn.addEventListener("click", function() {
+            startGame("easy");
+        })
+        hardBtn.addEventListener("click", function() {
+            startGame("hard");
+        })
+
+        extremeBtn.addEventListener("click", function() {
+            startExtreme();
+        })
+
+        resetBtn.addEventListener("click", function() {
+            alert("All progress has been reset.")
+            localStorage.clear();
+            console.log('All progress has been reset.');
+            location.reload();
+        })
+
+        let menuBtns = document.querySelectorAll(".menu-btn")
+
+        menuBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.getElementById("welcome").style.display = "flex";
+                document.getElementById("game").style.display = "none";
+                document.getElementById("achievments").style.display = "none"
+                document.getElementById("results").style.display = "none"
+                questionNumber = 1;
+                correctGuesses = 0
+                document.getElementById("game-questionNum").innerHTML = `Question ${questionNumber}`
+                document.getElementById("game-answersCorrect").innerHTML = `${correctGuesses}/10`
+            })
+        })
+
+        achievmentsBtn.addEventListener("click", function() {
+            document.getElementById("welcome").style.display = "none";
+            document.getElementById("achievments").style.display = "flex"
+        })
+
+        let D1districts = [
+            "Bohunice",
+            "Bosonohy",
+            "Bystrc",
+            "Černá_Pole",
+            "Černovice",
+            "Jundrov",
+            "Kohoutovice",
+            "Komárov",
+            "Komín",
+            "Královo_Pole",
+            "Lesná",
+            "Město_Brno",
+            "Nový_Lískovec",
+            "Pisárky",
+            "Řečkovice",
+            "Sadová",
+            "Staré_Brno",
+            "Starý_Lískovec",
+            "Štýřice",
+            "Trnitá",
+            "Tuřany",
+            "Veveří",
+            "Žabovřesky",
+            "Židenice",
+        ]
+
+        let D2districts = [
+            "Brněnské_Ivanovice",
+            "Dolní_Heršpice",
+            "Dvorska",
+            "Holásky",
+            "Horní_Heršpice",
+            "Husovice",
+            "Chrlice",
+            "Ivanovice",
+            "Jehnice",
+            "Kniničky",
+            "Líšeň",
+            "Maloměřice",
+            "Medlánky",
+            "Mokrá_Hora",
+            "Obřany",
+            "Ořešín",
+            "Ponava",
+            "Přízřenice",
+            "Slatina",
+            "Soběšice",
+            "Stránice",
+            "Útěchov_u_Brna",
+            "Zábrdovice",
+            "Žebětín",
+        ]
+
+        let districtsUsed = []
+
+        function clearDistrictsUsed() {
+            districtsUsed.length = 0
+        }
+
+        function changeAnswerType(mode) {
+            if (mode === "click") {
+                document.getElementById("game-guessing-div").style.display = "flex"
+                document.getElementById("extreme-guessing-div").style.display = "none"
+            } else if (mode === "write") {
+                document.getElementById("game-guessing-div").style.display = "none"
+                document.getElementById("extreme-guessing-div").style.display = "flex"
+            }
+        }
+
+        // Mala_Strana
+        function checkDistrictName(name) {
+            if (name.includes("_")) {
+                return name.replace(/_/g, " ");
+            } else {
+                return name
+            }
+        }
+
+        function saveAchievment(name,value) {
+            localStorage.setItem(name, value);
+            console.log(name, value);
+        }
+        
+        let correctPos = 0
+        
+        buttonClicked = false
+        
+        gameDifficulty = 0
+
+        let questionNumber = 1;
+        let correctGuesses = 0;
+
+        function startGame(diff) {
+
+            clearDistrictsUsed()
+            changeAnswerType("click")
+            if (diff === "easy") {
+                gameDifficulty = 1
+            } else if (diff === "hard") {
+                gameDifficulty = 2
+            }
+
+
+            document.getElementById("welcome").style.display = "none";
+            document.getElementById("game").style.display = "flex";
+            let gameBackground = document.getElementById("game-img")
+
+            let answer1 = document.getElementById("answer-btn-1")
+            let answer2 = document.getElementById("answer-btn-2")
+            let answer3 = document.getElementById("answer-btn-3")
+            let answer4 = document.getElementById("answer-btn-4")
+
+            function checkCorrectAnswer(answer) {
+                if (buttonClicked === false) {
+                    buttonClicked = true;
+
+                    questionNumber = questionNumber + 1;
+                    btn = document.querySelector(`#answer-btn-${answer}`)
+                    corBtn = document.querySelector(`#answer-btn-${correctPos}`)
+                    if (answer === correctPos) {
+                        //win
+                        btn.style.backgroundColor = '#60d394';
+    
+                        correctGuesses = correctGuesses + 1;
+                    } else {
+                        //wrong
+                        corBtn.style.backgroundColor = "#60d394"
+
+                        btn.style.backgroundColor = '#ee6055';
+                    }
+                    // update UI
+                    document.getElementById("game-questionNum").innerHTML = `Question ${questionNumber}`
+                    document.getElementById("game-answersCorrect").innerHTML = `${correctGuesses}/10`
+    
+                    if (questionNumber < 11) {
+                        setTimeout(() => {
+                            btn.style.backgroundColor = '';
+                            corBtn.style.backgroundColor = '';
+                            loadRound()
+                            buttonClicked = false;
+                        }, 1000);
+                    } else {
+                        // game end
+                        setTimeout(() => {
+                            btn.style.backgroundColor = '';
+                            corBtn.style.backgroundColor = ''
+                            loadRound()
+                            buttonClicked = false;
+                            if (gameDifficulty === 1) {
+                                document.getElementById("results-text").innerHTML = "Difficulty easy"
+                            } else if (gameDifficulty === 2) {
+                                document.getElementById("results-text").innerHTML = "Difficulty medium"
+                            } else if (gameDifficulty === 3) {
+                                document.getElementById("results-text").innerHTML = "Difficulty hard"
+                            }
+                            document.getElementById("results").style.display = "flex";
+                            document.getElementById("game").style.display = "none";
+    
+                            document.getElementById("results-score").innerHTML = `${correctGuesses}/10`
+
+                            if (correctGuesses = 10) {
+                                // achievment completed
+                                saveAchievment(`achievment${gameDifficulty}`,1);
+                                updateAchievments();
+                            }
+
+                            questionNumber = 1;
+                            correctGuesses = 0
+                            document.getElementById("game-questionNum").innerHTML = `Question ${questionNumber}`
+                            document.getElementById("game-answersCorrect").innerHTML = `${correctGuesses}/10`
+
+                        }, 1000);
+
+
+                    }
+
+                }
+            }
+
+            answer1.addEventListener("click", function(){
+                checkCorrectAnswer(1)
+            })
+            answer2.addEventListener("click", function(){
+                checkCorrectAnswer(2)
+            })
+            answer3.addEventListener("click", function(){
+                checkCorrectAnswer(3)
+            })
+            answer4.addEventListener("click", function(){
+                checkCorrectAnswer(4)
+            })
+
+            function loadRandomDistrict() {
+                if (gameDifficulty === 1) {
+                    const randomDistrict = D1districts[Math.floor(Math.random() * D1districts.length)];
+                    return randomDistrict
+                } else if (gameDifficulty === 2) {
+                    const randomDistrict = D2districts[Math.floor(Math.random() * D2districts.length)];
+                    return randomDistrict
+                }
+            }
+            function loadRound() {
+                // load map
+                do {
+                    correctDistrict = loadRandomDistrict();
+                } while (districtsUsed.includes(correctDistrict));
+                
+                gameBackground.src = `D${gameDifficulty}/D${gameDifficulty}_${correctDistrict}.png`;
+
+                // One answer is correct
+                correctPos = Math.floor(Math.random() * 4) + 1;
+
+                console.log(correctDistrict)
+                console.log(correctPos)
+                if (correctPos === 1) {
+                    answer1.innerHTML = checkDistrictName(correctDistrict);
+                } else if (correctPos === 2) {
+                    answer2.innerHTML = checkDistrictName(correctDistrict);
+                } else if (correctPos === 3) {
+                    answer3.innerHTML = checkDistrictName(correctDistrict);
+                } else if (correctPos === 4) {
+                    answer4.innerHTML = checkDistrictName(correctDistrict);
+                }
+
+                function addWrongAnswers() {
+                    if (correctPos !== 1) {
+                        console.log("cP isnt 1")
+                        do {
+                            randDistrict = loadRandomDistrict();
+                        } while (randDistrict === correctDistrict || districtsUsed.includes(randDistrict));
+                        answer1.innerHTML = checkDistrictName(randDistrict);
+                    }
+                    if (correctPos !== 2) {
+                        console.log("cP isnt 2")
+                        do {
+                            randDistrict = loadRandomDistrict();
+                        } while (randDistrict === correctDistrict ||  checkDistrictName(randDistrict) === answer1.innerHTML || districtsUsed.includes(randDistrict));
+                        answer2.innerHTML = checkDistrictName(randDistrict);
+                    }
+                    if (correctPos !== 3) {
+                        console.log("cP isnt 3")
+                        do {
+                            randDistrict = loadRandomDistrict();
+                        } while (randDistrict === correctDistrict || checkDistrictName(randDistrict) === answer1.innerHTML || checkDistrictName(randDistrict) === answer2.innerHTML || districtsUsed.includes(randDistrict));
+                        answer3.innerHTML = checkDistrictName(randDistrict);
+                    }
+                    if (correctPos !== 4) {
+                        console.log("cP isnt 4")
+                        do {
+                            randDistrict = loadRandomDistrict();
+                        } while (randDistrict === correctDistrict || checkDistrictName(randDistrict) === answer1.innerHTML || checkDistrictName(randDistrict) === answer2.innerHTML || checkDistrictName(randDistrict) === answer3.innerHTML || districtsUsed.includes(randDistrict));
+                        answer4.innerHTML = checkDistrictName(randDistrict);
+                    }
+                    // tu
+                }
+
+                districtsUsed.push(correctDistrict)
+                console.log(districtsUsed)
+
+                addWrongAnswers()
+            }
+            loadRound()
+        }
+        function startExtreme() {
+            clearDistrictsUsed()
+            changeAnswerType("write")
+
+            document.getElementById("game-answersCorrect").innerHTML = `${correctGuesses}/100`
+
+            document.getElementById("welcome").style.display = "none";
+            document.getElementById("game").style.display = "flex";
+            let gameBackground = document.getElementById("game-img");
+
+            function loadCompletelyRandomDistrict(diff) {
+                if (diff === 1) {
+                    const randomDistrict = D1districts[Math.floor(Math.random() * D1districts.length)];
+                    return randomDistrict
+                } else if (diff === 2) {
+                    const randomDistrict = D2districts[Math.floor(Math.random() * D2districts.length)];
+                    return randomDistrict
+                }
+            }
+
+            function loadNextDistrict() {
+                document.getElementById("game-questionNum").innerHTML = `Question ${questionNumber}`
+                document.getElementById("game-answersCorrect").innerHTML = `${correctGuesses}/40`
+                do {
+                    districtDiff = Math.floor(Math.random() * 2) + 1;
+                    correctDistrict = loadCompletelyRandomDistrict(districtDiff);
+                } while (districtsUsed.includes(correctDistrict));
+                
+                console.log(correctDistrict)
+                
+                gameBackground.src = `D${districtDiff}/D${districtDiff}_${correctDistrict}.png`;
+            }
+            
+            let answerField = document.getElementById("answer-text-field")
+            let errorMsg = document.getElementById("extreme-error-msg");
+            
+            document.getElementById("extreme-answer-btn").addEventListener("click", function() {
+                checkTextAnswer()
+            })
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault(); 
+                    checkTextAnswer();
+                }
+            });
+
+            function checkTextAnswer() {
+                if (buttonClicked === false) {
+                    buttonClicked = true;
+                    function checkDistrictNameOposite(text) {
+                        if (text.includes(" ")) {
+                            console.log("running")
+                            return text.replace(/ /g, "_");
+                        } else {
+                            console.log("running2")
+                            return text
+                        }
+                    }
+                    let playerString = String(answerField.value)
+                    var playerTextAnswer = checkDistrictNameOposite(playerString);
+
+                    // check answer
+                    let timeout = 0
+                    if (correctDistrict === playerTextAnswer) {
+                        // win
+                        answerField.style.backgroundColor = '#60d394';
+                        questionNumber = questionNumber + 1;
+                        correctGuesses = correctGuesses + 1
+                        timeout = 750
+                    } else {
+                        //lose
+                        answerField.style.backgroundColor = '#ee6055';
+                        errorMsg.innerHTML = checkDistrictName(correctDistrict);
+                        questionNumber = questionNumber + 1;
+                        timeout = 2000
+                    }
+                    districtsUsed.push(correctDistrict)
+
+                    if (questionNumber < 41) {
+                        console.log(districtsUsed)
+                        setTimeout(() => {
+                            answerField.style.backgroundColor = '';
+                            errorMsg.innerHTML = '';
+                            answerField.value = ''
+                            buttonClicked = false;
+                            loadNextDistrict()
+                        }, timeout);
+                    } else {
+                        setTimeout(() => {
+                            // 100 quiz complete
+                            answerField.style.backgroundColor = '';
+                            errorMsg.innerHTML = '';
+                            answerField.value = ''
+                            document.getElementById("results-text").innerHTML = "40 Quiz"
+                            
+                            document.getElementById("results").style.display = "flex";
+                            document.getElementById("game").style.display = "none";
+
+                            buttonClicked = false;
+
+                            if (correctGuesses > 30) {
+                                // achievment completed
+                                saveAchievment(`achievment3`,1);
+                                updateAchievments();
+                            }
+
+
+                            document.getElementById("results-score").innerHTML = `${correctGuesses}/40`
+                            questionNumber = 1;
+                            correctGuesses = 0
+                            document.getElementById("game-questionNum").innerHTML = `Question ${questionNumber}`
+                            document.getElementById("game-answersCorrect").innerHTML = `${correctGuesses}/10`
+                        }, timeout);
+                    }
+                }
+            }
+            loadNextDistrict()
+        }
+
+        function updateAchievments() {
+            // TU MAM TROCHU BORDEL PROTOZE SE JEDNA O LEVNOU KOPII Z PACISHMANA, PROTO ZDE NENI ACHIEVMENT-1-STATUS ALE BEZ POMLCEK
+            let achievment1Element = document.getElementById("achievment1")
+            let achievment1StatusElement = document.getElementById("achievment1Status")
+
+            let achievment2Element = document.getElementById("achievment2")
+            let achievment2Status = document.getElementById("achievment2Status")
+
+            let achievment3Element = document.getElementById("achievment3")
+            let achievment3Status = document.getElementById("achievment3Status")
+
+            if (localStorage.getItem('achievment1') == 1) {
+                achievment1Element.classList.remove("locked")
+                achievment1Element.classList.add("completed")
+                achievment1StatusElement.style.display = "none";
+            }
+            if (localStorage.getItem('achievment2') == 1) {
+                achievment2Element.classList.remove("locked")
+                achievment2Element.classList.add("completed")
+                achievment2Status.style.display = "none"
+            }
+            if (localStorage.getItem('achievment3') == 1) {
+                achievment3Element.classList.remove("locked")
+                achievment3Element.classList.add("completed")
+                achievment3Status.style.display = "none"
+            }
+        }
+        updateAchievments()
+    </script>
+</body>
+</html>
