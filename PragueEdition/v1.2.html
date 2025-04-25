@@ -158,7 +158,7 @@
             <button class="start-btn" id="extreme-btn" style="background-color: #202020; color: white;">100 Quiz</button>
             <button class="start-btn" id="achievments-btn">Achievments</button>
             <button class="start-btn" id="reset-btn">Reset Progress</button>
-            <p>v1.1</p>
+            <p>v1.2</p>
         </div>
     </main>
     <main id="game" style="display: none;">
@@ -345,7 +345,7 @@
             "Modřany",
             "Prosek",
             "Radotín",
-            "Reporyje",
+            "Řeporyje",
             "Řepy",
             "Slivenec",
             "Strašnice",
@@ -723,6 +723,9 @@
 
             function checkTextAnswer() {
                 if (buttonClicked === false) {
+
+                    timeoutTime = 0
+
                     buttonClicked = true;
                     function checkDistrictNameOposite(text) {
                         if (text.includes(" ")) {
@@ -739,11 +742,13 @@
                     // check answer
                     if (correctDistrict === playerTextAnswer) {
                         // win
+                        timeoutTime = 750
                         answerField.style.backgroundColor = '#60d394';
                         questionNumber = questionNumber + 1;
                         correctGuesses = correctGuesses + 1
                     } else {
                         //lose
+                        timeoutTime = 2000
                         answerField.style.backgroundColor = '#ee6055';
                         errorMsg.innerHTML = checkDistrictName(correctDistrict);
                         questionNumber = questionNumber + 1;
@@ -757,7 +762,7 @@
                             answerField.value = ''
                             loadNextDistrict()
                             buttonClicked = false;
-                        }, 2000);
+                        }, timeoutTime);
                     } else {
                         setTimeout(() => {
                             // 100 quiz complete
@@ -766,8 +771,16 @@
                             answerField.value = ''
                             document.getElementById("results-text").innerHTML = "100 Quiz"
                             
+                            const resultsAchievmentImg = document.getElementById("results-achievment-img");
+                            const resultsAchievmentDesc = document.getElementById("results-achievment-desc");
+
+                            resultsAchievmentImg.src = "achievments/4.png";
+                            resultsAchievmentDesc.innerHTML = "Get over 50 on 100 Quiz";
                             document.getElementById("results").style.display = "flex";
                             document.getElementById("game").style.display = "none";
+
+                            void statusBar.offsetWidth;
+                            setStatusBarWidth(correctGuesses)
 
                             if (correctGuesses > 50) {
                                 // achievment completed
@@ -777,6 +790,7 @@
                                     document.getElementById("results-achievment-status").innerHTML = "Completed!";
                                     updateAchievments();
                                 }, 2500)
+                                gameDifficulty = 4
                                 saveAchievment(`achievment${gameDifficulty}`,1);
                             }
                             setTimeout(() => {
@@ -790,7 +804,7 @@
                             correctGuesses = 0
                             document.getElementById("game-questionNum").innerHTML = `Question ${questionNumber}`
                             document.getElementById("game-answersCorrect").innerHTML = `${correctGuesses}/10`
-                        }, 2000);
+                        }, timeoutTime);
                     }
                 }
             }
